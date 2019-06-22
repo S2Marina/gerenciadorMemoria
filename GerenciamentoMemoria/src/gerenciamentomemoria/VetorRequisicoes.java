@@ -7,10 +7,6 @@ package gerenciamentomemoria;
 
 import java.util.Random;
 
-/**
- *
- * @author alunos
- */
 public class VetorRequisicoes {
 
     private Requisicao inicio = null;

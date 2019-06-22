@@ -1,25 +1,18 @@
 package gerenciamentomemoria;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author alunos
- */
 public class Configuracao {
     private Integer tamanhoHeap;
-    private Double limiarMaximoHeap;
+    private Integer limiarMaximoHeap;
     private Integer minRequisicao;
     private Integer maxRequisicao;
+    private Integer tamanhoPagina;
 
-    public Configuracao(Integer tamanhoHeap, Double limiarMaximoHeap, Integer minRequisicao, Integer maxRequisicao) {
-        this.tamanhoHeap = tamanhoHeap; //em kb
-        this.limiarMaximoHeap = limiarMaximoHeap * 256; //recebe em kb passa para palavras
+    public Configuracao(Integer tamanhoHeap, Integer limiarMaximoHeap, Integer minRequisicao, Integer maxRequisicao, Integer tamanhoPagina) {
+        this.tamanhoHeap = tamanhoHeap; //em bytes
+        this.limiarMaximoHeap = limiarMaximoHeap; //em bytes
         this.minRequisicao = minRequisicao;
         this.maxRequisicao = maxRequisicao;
+        this.tamanhoPagina = tamanhoPagina; //em bytes
     }
 
     public Integer getTamanhoHeap() {
@@ -30,11 +23,11 @@ public class Configuracao {
         this.tamanhoHeap = tamanhoHeap;
     }
 
-    public Double getLimiarMaximoHeap() {
+    public Integer getLimiarMaximoHeap() {
         return limiarMaximoHeap;
     }
 
-    public void setLimiarMaximoHeap(Double limiarMaximoHeap) {
+    public void setLimiarMaximoHeap(Integer limiarMaximoHeap) {
         this.limiarMaximoHeap = limiarMaximoHeap;
     }
 
@@ -53,6 +46,13 @@ public class Configuracao {
     public void setMaxRequisicao(Integer maxRequisicao) {
         this.maxRequisicao = maxRequisicao;
     }
-    
+
+    public Integer getTamanhoPagina() {
+        return tamanhoPagina;
+    }
+
+    public void setTamanhoPagina(Integer tamanhoPagina) {
+        this.tamanhoPagina = tamanhoPagina;
+    }
     
 }

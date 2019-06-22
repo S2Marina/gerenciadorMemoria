@@ -1,37 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gerenciamentomemoria;
 
-
-
-/**
- *
- * @author alunos
- */
 public class GerenciamentoMemoria {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        //public Configuracao(tamanhoHeap (em kb),limiarMaximoHeap,minRequisicao,maxRequisicao)
-        Configuracao conf = new Configuracao(1, 0.5 , 1, 30); 
-        Heap heap = new Heap();
-        heap.setTamanho(conf.getTamanhoHeap());
+        //public Configuracao(tamanhoHeap (em bytes),limiarMaximoHeap,minRequisicao,maxRequisicao,tamanhoPagina(bytes))
+        Configuracao conf = new Configuracao(512, 256, 1, 30, 8);
+        Heap heap = new Heap(conf.getTamanhoHeap(), conf.getTamanhoPagina());
         VetorRequisicoes v = new VetorRequisicoes(conf);
-        
-        for (int i = 0; i < 25; i++) { 
+
+        for (int i = 0; i < 25; i++) {
             v.inserir();
-            heap.alocarVariavel(v);
-            if(heap.getAlocado() > conf.getLimiarMaximoHeap()){
+            if (heap.getAlocado() >= conf.getLimiarMaximoHeap()) {
                 heap.desalocarVariavel();
+                System.out.println("DESALOCA");
+                for (int j = 0; j < heap.getVetor().length; j++) {
+                    System.out.println(heap.getVetor()[j]);
+                }
             }
-        }
-        for (Integer vetor : heap.getVetor()) {
-            System.out.println(vetor);
+            heap.alocarVariavel(v);
+            for (int j = 0; j < heap.getVetor().length; j++) {
+                System.out.println(heap.getVetor()[j]);
+            }
         }
     }
 }
