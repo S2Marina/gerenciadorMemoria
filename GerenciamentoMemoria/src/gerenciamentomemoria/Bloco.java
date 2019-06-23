@@ -1,10 +1,10 @@
 package gerenciamentomemoria;
 
-public class Pagina {
+public class Bloco {
     private Integer id;
     private Integer instante;
 
-    public Pagina(Integer id, Integer instante) {
+    public Bloco(Integer id, Integer instante) {
         this.id = id;
         this.instante = instante;
     }

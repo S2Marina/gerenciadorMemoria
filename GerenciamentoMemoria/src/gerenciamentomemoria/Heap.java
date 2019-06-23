@@ -6,34 +6,44 @@ public class Heap {
 
     private Integer tamanho; //em bytes
     private Integer alocado = 0;
-    private Pagina[] vetor;
-    private Integer tamanhoPagina;
+    private Bloco[] vetor;
+    private Integer tamanhoBloco;
+    private Requisicao maior; //guarda a requisicao do maior bloco alocado contiguamente
 
     public Heap(Integer tamanho, Integer tamanhoPagina) {
         this.tamanho = tamanho;
-        this.tamanhoPagina = tamanhoPagina;
-        Integer tamanhoVetor = tamanho / tamanhoPagina; 
-        this.vetor = new Pagina[tamanhoVetor];
+        this.tamanhoBloco = tamanhoPagina;
+        Integer tamanhoVetor = tamanho / tamanhoPagina;
+        this.vetor = new Bloco[tamanhoVetor];
         for (int i = 0; i < tamanhoVetor; i++) {
-            Pagina p = new Pagina(0, 0);
+            Bloco p = new Bloco(0, 0);
             this.vetor[i] = p;
         }
+        this.maior = new Requisicao(0,0);
     }
 
-    public Integer getTamanhoPagina() {
-        return tamanhoPagina;
+    public Requisicao getMaior() {
+        return maior;
     }
 
-    public void setTamanhoPagina(Integer tamanhoPagina) {
-        this.tamanhoPagina = tamanhoPagina;
+    public void setMaior(Requisicao maior) {
+        this.maior = maior;
+    }
+
+    public Integer getTamanhoBloco() {
+        return tamanhoBloco;
+    }
+
+    public void setTamanhoBloco(Integer tamanhoBloco) {
+        this.tamanhoBloco = tamanhoBloco;
     }
 
     public Integer getAlocado() {
-        return alocado * tamanhoPagina;
+        return alocado * tamanhoBloco;
     }
 
     public void setAlocado(Integer alocado) {
-        this.alocado = alocado / tamanhoPagina;
+        this.alocado = alocado / tamanhoBloco;
     }
 
     public Integer getTamanho() {
@@ -44,41 +54,54 @@ public class Heap {
         this.tamanho = tamanhoHeap;
     }
 
-    public Pagina[] getVetor() {
+    public Bloco[] getVetor() {
         return vetor;
     }
 
     public void alocarVariavel(VetorRequisicoes requisicoes) {
         Requisicao requisicao = requisicoes.remover();
         Integer tamanhoVariavel = requisicao.getTamVariavel();
-        this.setAlocado(this.getAlocado() + (tamanhoVariavel * tamanhoPagina));
+        this.setAlocado(this.getAlocado() + (tamanhoVariavel * tamanhoBloco));
         Integer instante = gerarInstante();
+
+        if (requisicao.getTamVariavel() > this.maior.getTamVariavel()) {
+            this.setMaior(requisicao);
+        }
+
         //algoritmo de alocação
         for (int i = 0; i < vetor.length; i++) {
             if (vetor[i].getId() == 0 && tamanhoVariavel > 0) {
-                Pagina alocar = new Pagina(requisicao.getId(), instante);
-                vetor[i] = alocar;                
+                Bloco alocar = new Bloco(requisicao.getId(), instante);
+                vetor[i] = alocar;
                 tamanhoVariavel--;
             }
         }
+
     }
 
-    public void desalocarVariavel() {
-        Integer aloc = this.getAlocado() / this.getTamanhoPagina();
-        Pagina vazia = new Pagina(0,0);
-        //algoritmo de desalocação
-        for (int i = 0; i < (vetor.length); i++) {
-//            desaloca tudo
-//            if (vetor[i].getId() != 0) {
-//                vetor[i].setId(0);
-//                vetor[i].setInstante(0);
-//            }
-            if(vetor[i].getInstante() == 0){
-                vetor[i] = vazia;
-                aloc--;
+    public void desalocarVariavel(Integer algoritmo) {
+        Integer aloc = this.getAlocado() / this.getTamanhoBloco();
+        Bloco vazia = new Bloco(0, 0);
+        if (algoritmo == 0) {
+            //algoritmo de desalocação LRU
+            for (int i = 0; i < (vetor.length); i++) {
+                if (vetor[i].getInstante() == 0) {
+                    vetor[i] = vazia;
+                    aloc--;
+                }
+            }
+        } else {
+            //algoritmo de desalocação maior bloco
+            for (int i = 0; i < (vetor.length); i++) {
+                if (vetor[i].getId() == this.maior.getId()) {
+                    vetor[i] = vazia;
+                    aloc--;
+                }
             }
         }
-        this.setAlocado(aloc * this.getTamanhoPagina());
+        Requisicao r = new Requisicao(0, 0);
+        this.setMaior(r);
+        this.setAlocado(aloc * this.getTamanhoBloco());
     }
 
     //random.nextInt((max - min) + 1) + min;      
