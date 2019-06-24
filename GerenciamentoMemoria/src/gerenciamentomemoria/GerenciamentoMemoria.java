@@ -11,16 +11,9 @@ public class GerenciamentoMemoria {
         for (int i = 0; i < 25; i++) {
             v.inserir();
             if (heap.getAlocado() >= conf.getLimiarMaximoHeap()) {
-                heap.desalocarVariavel(0);
-                System.out.println("DESALOCA LRU");
-                for (int j = 0; j < heap.getVetor().length; j++) {
-                    System.out.println(heap.getVetor()[j]);
-                }
-                System.out.println("-------------");
-            }
-            if(heap.getAlocado() >= conf.getLimiarMaximoHeap()){
-                heap.desalocarVariavel(1);
-                System.out.println("DESALOCA MAIOR BLOCO");
+                heap.desalocarVariavel();
+                
+                System.out.println("DESALOCA");
                 for (int j = 0; j < heap.getVetor().length; j++) {
                     System.out.println(heap.getVetor()[j]);
                 }
