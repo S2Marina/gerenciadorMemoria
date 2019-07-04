@@ -4,8 +4,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/gerenciamentomemoria/Heap.java</file>
+            <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/threads/MainThread.java</file>
             <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/gerenciamentomemoria/Bloco.java</file>
-            <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/gerenciamentomemoria/Requisicao.java</file>
+            <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/threads/Decrementer.java</file>
+            <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/gerenciamentomemoria/Monitor.java</file>
+            <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/gerenciamentomemoria/VetorRequisicoes.java</file>
+            <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/threads/MyMonitor.java</file>
+            <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/threads/Incrementer.java</file>
             <file>file:/home/marina/Documentos/gerenciadorMemoria/GerenciamentoMemoria/src/gerenciamentomemoria/GerenciamentoMemoria.java</file>
         </group>
     </open-files>

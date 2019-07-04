@@ -58,24 +58,17 @@ public class Heap {
         return vetor;
     }
 
-    public void alocarVariavel(VetorRequisicoes requisicoes) {
+    public synchronized void alocarVariavel(VetorRequisicoes requisicoes) {
         Requisicao requisicao = requisicoes.remover();
         Integer tamanhoVariavel = requisicao.getTamVariavel();
-        
-        if(tamanhoVariavel > (this.getTamanho() - this.getAlocado()) ){
+
+        if (tamanhoVariavel > (this.getTamanho() - this.getAlocado())) {
             this.desalocarVariavel();
-            
-            System.out.println("DESALOCA");
-                for (int j = 0; j < this.getVetor().length; j++) {
-                    System.out.println(this.getVetor()[j]);
-                }
-                System.out.println("-------------");
         }
-        
+
         //altera a variavel alocado
         this.setAlocado(this.getAlocado() + (tamanhoVariavel * tamanhoBloco));
         Integer instante = gerarInstante();
-               
 
         //algoritmo de alocação
         for (int i = 0; i < vetor.length; i++) {
@@ -88,7 +81,7 @@ public class Heap {
 
     }
 
-    public void desalocarVariavel() {
+    public synchronized void desalocarVariavel() {
         Integer aloc = this.getAlocado() / this.getTamanhoBloco();
         Bloco vazia = new Bloco(0, 0);
         //algoritmo de desalocação LRU
@@ -100,7 +93,7 @@ public class Heap {
         }
 
         this.setAlocado(aloc * this.getTamanhoBloco());
-        
+
         //apos 3 desalocações zera todos os instantes
         if (this.getCont() >= 2) {
             System.out.println("ALTERA INSTANTE");
@@ -113,6 +106,7 @@ public class Heap {
             System.out.println("cont: " + this.getCont());
         }
 
+        this.imprimir();
     }
 
     //random.nextInt((max - min) + 1) + min;      
@@ -121,5 +115,13 @@ public class Heap {
         //gera 0 ou 1
         Integer i = random.nextInt(2);
         return i;
+    }
+
+    public void imprimir() {
+        System.out.println("DESALOCA");
+        for (int j = 0; j < this.getVetor().length; j++) {
+            System.out.println(this.getVetor()[j]);
+        }
+        System.out.println("-------------");
     }
 }

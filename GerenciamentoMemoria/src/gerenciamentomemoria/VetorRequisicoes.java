@@ -25,7 +25,7 @@ public class VetorRequisicoes {
         return retorno;
     }
 
-    public void inserir() {
+    public synchronized void inserir() {
         Integer id, tamVariavel;
         id = gerarId();
         tamVariavel = gerarTamVariavel();
