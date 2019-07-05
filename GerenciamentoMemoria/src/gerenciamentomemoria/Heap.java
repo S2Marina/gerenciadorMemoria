@@ -1,6 +1,8 @@
 package gerenciamentomemoria;
 
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Heap {
 
@@ -58,13 +60,15 @@ public class Heap {
         return vetor;
     }
 
-    public synchronized void alocarVariavel(VetorRequisicoes requisicoes) {
+    public void alocarVariavel(VetorRequisicoes requisicoes) {
+        //colocar no run para trancar só a seção critica
+        //trancar só onde eu for mexer
         Requisicao requisicao = requisicoes.remover();
         Integer tamanhoVariavel = requisicao.getTamVariavel();
 
-        if (tamanhoVariavel > (this.getTamanho() - this.getAlocado())) {
-            this.desalocarVariavel();
-        }
+//        if (tamanhoVariavel > (this.getTamanho() - this.getAlocado())) {
+//            this.desalocarVariavel();
+//        }
 
         //altera a variavel alocado
         this.setAlocado(this.getAlocado() + (tamanhoVariavel * tamanhoBloco));
@@ -74,21 +78,38 @@ public class Heap {
         for (int i = 0; i < vetor.length; i++) {
             if (vetor[i].getId() == 0 && tamanhoVariavel > 0) {
                 Bloco alocar = new Bloco(requisicao.getId(), instante);
-                vetor[i] = alocar;
+                try {
+                   // System.out.println(requisicao.getId() + " acquire pra posição: " + i);
+                    vetor[i].getSemaforo().acquire();
+                    vetor[i] = alocar;
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Heap.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    vetor[i].getSemaforo().release();
+                }
                 tamanhoVariavel--;
             }
         }
+        System.out.println("alocar id: " + requisicao.getId());
 
     }
 
-    public synchronized void desalocarVariavel() {
+    public void desalocarVariavel() {
         Integer aloc = this.getAlocado() / this.getTamanhoBloco();
         Bloco vazia = new Bloco(0, 0);
         //algoritmo de desalocação LRU
         for (int i = 0; i < (vetor.length); i++) {
             if (vetor[i].getInstante() == 0) {
-                vetor[i] = vazia;
-                aloc--;
+                try {
+                    //System.out.println("desaloca posicao: " + i);
+                    vetor[i].getSemaforo().acquire();
+                    vetor[i] = vazia;
+                    aloc--;
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Heap.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    vetor[i].getSemaforo().release();
+                }
             }
         }
 
@@ -96,17 +117,21 @@ public class Heap {
 
         //apos 3 desalocações zera todos os instantes
         if (this.getCont() >= 2) {
-            System.out.println("ALTERA INSTANTE");
             for (int i = 0; i < (vetor.length); i++) {
-                vetor[i].setInstante(0);
+                try {
+                    vetor[i].getSemaforo().acquire();
+                    vetor[i].setInstante(0);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Heap.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    vetor[i].getSemaforo().release();
+                }
             }
             this.setCont(0);
         } else {
             this.setCont(this.getCont() + 1);
-            System.out.println("cont: " + this.getCont());
         }
-
-        this.imprimir();
+        System.out.println("desalocar");
     }
 
     //random.nextInt((max - min) + 1) + min;      
@@ -117,8 +142,7 @@ public class Heap {
         return i;
     }
 
-    public void imprimir() {
-        System.out.println("DESALOCA");
+    public synchronized void imprimir() {
         for (int j = 0; j < this.getVetor().length; j++) {
             System.out.println(this.getVetor()[j]);
         }

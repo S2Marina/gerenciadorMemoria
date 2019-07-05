@@ -11,6 +11,7 @@ public class Alocar extends Thread{
     }
     
     public void run() {
-         h.alocarVariavel(requisicoes);
+        h.alocarVariavel(requisicoes);
+        //h.imprimir();
     }
 }

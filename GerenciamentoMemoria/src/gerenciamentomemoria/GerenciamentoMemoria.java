@@ -8,43 +8,48 @@ public class GerenciamentoMemoria {
     public static void main(String[] args) {
         //public Configuracao(tamanhoHeap (em bytes),limiarMaximoHeap,minRequisicao,maxRequisicao,tamanhoPagina(bytes))
         Configuracao conf = new Configuracao(512, 256, 1, 30, 8);
+        Integer requisicoes = 100;
         Heap heap = new Heap(conf.getTamanhoHeap(), conf.getTamanhoPagina());
-        VetorRequisicoes v = new VetorRequisicoes(conf);
-        //threads
-        Alocar alocar = new Alocar(heap, v);
-        Desalocar desalocar = new Desalocar(heap, v);
-        NovaRequisicao requisicao = new NovaRequisicao(v);
+        VetorRequisicoes vetorRequisicoes = new VetorRequisicoes(conf);
 
-        ExecutorService executor = Executors.newFixedThreadPool(5);
-        for (int i = 0; i < 10; i++) {
-            executor.execute(requisicao);
-            if (!v.vazia()) {
-                executor.execute(alocar);
-            }
-            if (heap.getAlocado() >= conf.getLimiarMaximoHeap()) {
-                desalocar.start();
-            }
+        //threads
+        Alocar alocar = new Alocar(heap, vetorRequisicoes);
+        Desalocar desalocar = new Desalocar(heap);
+        //NovaRequisicao requisicao = new NovaRequisicao(vetorRequisicoes);
+        for (int i = 0; i < requisicoes; i++) {
+            vetorRequisicoes.inserir();
         }
-        executor.shutdown();
 
         //paralelo
-//        requisicao.start();
-//        if (!v.vazia()) {
-//            alocar.start();
-//        }
-//
-//        if (heap.getAlocado() >= conf.getLimiarMaximoHeap()) {
-//            desalocar.start();
-//        }
-        //sequencial
+        
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        long tempoInicial = System.currentTimeMillis();
+        do {           
+            executor.execute(alocar);
+            requisicoes--;
+
+            if (heap.getAlocado() >= conf.getLimiarMaximoHeap()) {
+                executor.execute(desalocar);
+            }
+        } while (requisicoes!= 0);
+        executor.shutdown();
+        if(executor.isTerminated()){
+            System.out.println("Paralelo: " + (System.currentTimeMillis() - tempoInicial) + "ms");
+        }
+        
+
+ 
+          //sequencial
 //        long tempoInicial = System.currentTimeMillis();
 //        for (int i = 0; i < 25; i++) {
-//            v.inserir();
+//            vetorRequisicoes.inserir();
 //            if (heap.getAlocado() >= conf.getLimiarMaximoHeap()) {
 //                heap.desalocarVariavel();
+//                //heap.imprimir();
 //            }
-//            heap.alocarVariavel(v);
-//            heap.imprimir();
+//            heap.alocarVariavel(vetorRequisicoes);
+//            //heap.imprimir();
+//
 //        }
 //        System.out.println("sequencial: " + (System.currentTimeMillis() - tempoInicial) + "ms");
     }

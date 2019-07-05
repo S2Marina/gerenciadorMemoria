@@ -11,6 +11,7 @@ public class VetorRequisicoes {
 
     private Requisicao inicio = null;
     private Requisicao fim = null;
+    private Requisicao ultimo = null;
     private Configuracao conf;
 
     public VetorRequisicoes(Configuracao conf) {
@@ -24,7 +25,7 @@ public class VetorRequisicoes {
         }
         return retorno;
     }
-
+   
     public synchronized void inserir() {
         Integer id, tamVariavel;
         id = gerarId();
@@ -38,8 +39,9 @@ public class VetorRequisicoes {
             nova.setProxima(inicio);
             fim.setProxima(nova);
             fim = nova;
+            ultimo = nova;
         }
-        System.out.println(nova.toString());
+        //System.out.println(nova.toString());
     }
 
     public Requisicao remover() {
@@ -52,7 +54,8 @@ public class VetorRequisicoes {
             fim = null;
         } else {
             removida = inicio;
-            fim = inicio;
+            Requisicao vazia = new Requisicao(0, 0);
+            fim = vazia;
             inicio = inicio.getProxima();
             fim.setProxima(inicio);
         }

@@ -1,15 +1,14 @@
 package gerenciamentomemoria;
 
 public class Desalocar extends Thread {
-    private VetorRequisicoes requisicoes;
     private Heap h;
 
-    public Desalocar(Heap heap, VetorRequisicoes requisicoes) {
+    public Desalocar(Heap heap) {
         this.h = heap;
-        this.requisicoes = requisicoes;
     }
 
     public void run() {
-        h.alocarVariavel(requisicoes);
+        h.desalocarVariavel();
+        //h.imprimir();
     }
 }
